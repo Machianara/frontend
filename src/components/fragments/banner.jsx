@@ -1,5 +1,5 @@
 import Buttons from "../elements/button";
-import ImgBanner from "../../assets/img/imgbanner.svg" 
+import ImgBanner from "../../assets/img/imgBanner.svg" 
 
 const Banner = () => {
     return (
