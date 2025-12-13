@@ -14,7 +14,7 @@ import Ticket from "../assets/img/imgTicket.svg";
 import Suggestion from "../assets/img/imgSuggestion.svg";
 import Forcasting from "../assets/img/imgForcasting.svg";
 import Banner from "../components/fragments/banner";
-import CaseStudyCards from "../components/fragments/CaseStudyCards";
+import CaseStudyCards from "../components/fragments/caseStudyCards";
 import WorkingProcess from "../components/fragments/accordion";
 import CardTeam from "../components/fragments/cardTeam";
 import Testimonial from "../components/fragments/testimonial";
