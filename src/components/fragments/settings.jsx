@@ -178,14 +178,14 @@ const DashboardSettings = () => {
 
       <div className="flex flex-col">
         {/* Name */}
-        <SettingRow label="Full Name">
+        {/* <SettingRow label="Full Name">
           <Input
             name="name"
             value={formData.name}
             onChange={handleInputChange}
             className="h-12 bg-white border-gray-200 text-gray-700 text-[16px] focus:ring-2 focus:ring-[#6366F1]"
           />
-        </SettingRow>
+        </SettingRow> */}
 
         {/* Phone (Read Only) */}
         <SettingRow label="Phone Number">
