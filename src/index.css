@@ -40,8 +40,6 @@ body {
     @apply w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 xl:px-[94px] bg-white;
   }
 
-
-  /* 1. Kontainer kartu utama */
   .card-machine {
     @apply flex flex-col md:flex-row h-full gap-8 min-h-[310px] justify-between p-[25px] lg:p-[50px] 
            border border-primary rounded-[45px] w-full max-w-full lg:max-w-[600px] 
@@ -50,42 +48,34 @@ body {
            shadow-[0_5px_0_#191A23];
   }
 
-  /* 2. Pembungkus konten di sisi kiri */
   .card-machine__content {
     @apply flex flex-row md:flex-col justify-between h-[-webkit-fill-available];
   }
 
-  /* 3. Pembungkus untuk dua baris judul */
   .card-machine__title-wrapper {
     @apply flex flex-col;
   }
 
-  /* 4. Judul "badge" itu sendiri */
   .card-machine__title {
     @apply px-[7px] py-0 text-[18px] md:text-[30px] rounded-[7px] w-fit;
   }
 
-  /* 5. Pembungkus "Learn More" (ini adalah 'group') */
   .card-machine__link {
     @apply flex flex-row gap-[15px] cursor-pointer items-center;
   }
 
-  /* 6. Ikon panah "Learn More" */
   .card-machine__link-icon {
     @apply group-hover:rotate-30 w-full max-w-7 lg:max-w-10 transform transition ease-in-out duration-300;
   }
 
-  /* 7. Ilustrasi di sisi kanan (opsional, tapi praktik yang baik) */
   .card-machine__illustration {
     @apply max-w-48 lg:max-w-full
   }
 
-  /* Pembungkus untuk semua item accordion */
   .accordion-wrapper {
     @apply w-full flex flex-col gap-4 md:gap-[30px] mb-[100px] md:mb-[147px];
   }
 
-  /* Style dasar untuk satu item (kotaknya) */
   .accordion-item {
     @apply shadow-[0_5px_0_#191A23] cursor-pointer w-full rounded-[30px] border border-black
      px-4 py-4 md:px-[60px] md:py-[41px] 
@@ -114,19 +104,16 @@ body {
     @apply flex flex-row gap-[15px] md:gap-[25px] items-center;
   }
 
-  /* Styling untuk Angka ("01", "02") */
   .accordion-item__number {
     @apply text-[24px] md:text-5xl font-bold
      transition-colors duration-300 ease-out;
   }
 
-  /* Styling untuk Judul ("Consultation") */
   .accordion-item__title {
     @apply text-[16px] md:text-2xl font-bold
      transition-colors duration-300 ease-out;
   }
 
-  /* Pembungkus ikon lingkaran di kanan */
   .accordion-item__icon-wrapper {
     @apply w-9 h-9 md:w-11 md:h-11 shrink-0 
      rounded-full border flex items-center justify-center 
@@ -140,34 +127,27 @@ body {
      transition-all duration-300 ease-out;
   }
 
-  /* Container ikon '+' */
   .accordion-icon {
     @apply w-[18px] h-[18px] md:w-[25px] md:h-[25px] mb-[3px] relative ;
   }
 
-  /* Ini adalah style untuk KEDUA 'bar' (horizontal & vertikal) */
   .accordion-icon__bar {
     @apply absolute top-1/2 left-0 w-full h-1
     
      transition-all duration-300 ease-out;
   }
 
-  /* Bar pertama (horizontal) */
   .accordion-icon__bar:first-child {
   }
 
-  /* Bar kedua (vertikal) */
   .accordion-icon__bar:last-child {
     @apply rotate-90; 
   }
 
-  /* 1. Style panel (Grid Container) saat TERTUTUP */
   .accordion-item__panel {
     @apply grid grid-rows-[0fr] opacity-0 
      transition-all duration-300 ease-out;
   }
-
-  /* 2. Style panel saat TERBUKA */
   .accordion-item--open .accordion-item__panel {
     @apply grid-rows-[1fr] opacity-100;
   }
@@ -178,16 +158,10 @@ body {
   }
 
   /* --- AKHIR PERUBAHAN KE GRID --- */
-
-  /* Beri transisi warna pada paragraf di dalam panel */
   .accordion-item__panel p {
     @apply transition-colors duration-300 ease-out;
     @apply pt-6 md:pt-[30px];
   }
-
-  /* --- Kustomisasi Warna Berdasarkan State (Tidak Berubah) --- */
-
-  /* Saat DIBUKA: semua teks di dalam jadi putih */
   .accordion-item--open .accordion-item__number,
   .accordion-item--open .accordion-item__title,
   .accordion-item--open p {
@@ -200,10 +174,8 @@ body {
     @apply bg-white;
   }
   .accordion-item--open .accordion-icon__bar:last-child {
-    @apply rotate-0; /* Animasi '-' */
+    @apply rotate-0; 
   }
-
-  /* Saat DITUTUP: semua teks kembali ke warna base */
   .accordion-item--closed .accordion-item__number,
   .accordion-item--closed .accordion-item__title,
   .accordion-item--closed p {
@@ -217,8 +189,6 @@ body {
   }
 
   /* accordion support */
-/* 1. Item Container (Kotak Luar) */
-
   .accordion-wrapper-support {
     @apply w-full flex flex-col gap-4;
   }
@@ -229,22 +199,18 @@ body {
     transition-all duration-300 ease-out;
 }
 
-/* Efek Hover (Opsional, agar lebih interaktif) */
 .accordion-item-support:hover {
   @apply border-gray-300 shadow-sm;
 }
 
-/* State Terbuka (Open) */
 .accordion-item-support--open {
   @apply bg-white border-gray-300 shadow-md; 
 }
 
-/* State Tertutup (Closed) */
 .accordion-item-support--closed {
   @apply bg-white;
 }
 
-/* 2. Header (Baris Atas) */
 .accordion-item-support__header {
   @apply flex flex-row justify-between items-start gap-4;
 }
@@ -253,27 +219,25 @@ body {
   @apply flex-1;
 }
 
-/* Judul Pertanyaan */
+
 .accordion-item-support__title {
   @apply text-[18px] font-bold text-gray-900 leading-snug;
 }
 
-/* 3. Wrapper Ikon (+/-) */
 .accordion-item-support__icon-wrapper {
   @apply w-6 h-6 shrink-0 relative flex items-center justify-center mt-1;
 }
 
-/* Kita gunakan ulang class .accordion-icon dasar, tapi kita override warnanya */
 .accordion-item-support .accordion-icon__bar {
   @apply bg-black absolute top-1/2 left-0 w-full h-0.5 transition-transform duration-300 ease-out;
 }
 
-/* Bar Vertikal (untuk membuat tanda +) */
+/* Bar Vertikal */
 .accordion-item-support .accordion-icon__bar:last-child {
   @apply rotate-90;
 }
 
-/* Saat Terbuka: Putar bar vertikal jadi datar (tanda -) */
+/* Saat Terbuka: Putar bar vertikal jadi datar */
 .accordion-item-support--open .accordion-icon__bar:last-child {
   @apply rotate-0;
 }
@@ -341,11 +305,7 @@ body {
 .testimonial-bubble::before {
   content: "";
   @apply absolute w-0 h-0 z-0;
-
-  /* Posisi: 80px dari kiri, dan -16px di BAWAH */
   @apply left-20 -bottom-4;
-
-  /* Bentuk Segitiga (16px) menghadap ke BAWAH */
   @apply border-l-16 border-l-transparent;
   @apply border-r-16 border-r-transparent;
   @apply border-t-16 border-t-[#8C90FF];
@@ -354,11 +314,7 @@ body {
 .testimonial-bubble::after {
   content: "";
   @apply absolute w-0 h-0 z-10;
-
-  /* Posisi: 2px lebih ke kanan dan 2px lebih ke atas dari ::before */
   @apply left-[82px] bottom-[-13.3px];
-
-  /* Bentuk Segitiga (14px, lebih kecil dari border) menghadap ke BAWAH */
   @apply border-l-14 border-l-transparent;
   @apply border-r-14 border-r-transparent;
   @apply border-t-14 border-t-[#191A23];
