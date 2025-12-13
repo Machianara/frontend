@@ -88,7 +88,7 @@ export const EquipmentList = ({
         </div>
       </div>
 
-      <div className="space-y-4 h-screen overflow-y-auto pr-1 custom-scrollbar">
+      <div className="space-y-4 h-[135vh] overflow-y-auto pr-1 custom-scrollbar">
         {data.length === 0 ? (
           <div className="text-center py-10 text-gray-400 text-sm border-2 border-dashed rounded-xl">
             {isLoadingMore ? "Loading..." : `No ${activeTab} machines found.`}

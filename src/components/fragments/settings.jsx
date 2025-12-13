@@ -215,7 +215,7 @@ const DashboardSettings = () => {
               name="biography"
               value={formData.biography}
               onChange={handleInputChange}
-              className="min-h-40 resize-y bg-white border-gray-200 text-gray-600 text-[14px] sm:text-[16px] leading-relaxed p-4 rounded-xl focus-visible:ring-[#6366F1]"
+              className="min-h-40 resize-y bg-white  text-gray-600 text-[14px] sm:text-[16px] leading-relaxed p-4 rounded-xl focus-visible:ring-primary focus-visible:ring-2  focus-visible:outline-none"
               maxLength={325}
               placeholder="Tell us about your role..."
             />
@@ -254,7 +254,7 @@ const DashboardSettings = () => {
         <Button
           onClick={handleSave}
           disabled={isLoading}
-          className="h-11 px-8 rounded-full bg-[#6366F1] hover:bg-[#5558dd] text-white font-semibold shadow-md shadow-indigo-200"
+          className="h-11 px-8 rounded-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-md shadow-indigo-200"
         >
           {isLoading ? (
             <>

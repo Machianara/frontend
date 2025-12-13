@@ -39,7 +39,7 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-        root: cn("w-fit", defaultClassNames.root),
+        root: cn("w-fit h-full", defaultClassNames.root),
         months: cn(
           "flex gap-4 flex-col md:flex-row relative",
           defaultClassNames.months
@@ -104,16 +104,18 @@ function Calendar({
             : "[&:first-child[data-selected=true]_button]:rounded-l-md",
           defaultClassNames.day
         ),
+        // --- PERUBAHAN DI SINI (Hapus bg-accent di wrapper) ---
         range_start: cn(
-          "rounded-l-md bg-accent",
+          "rounded-l-md", // Hapus 'bg-accent'
           defaultClassNames.range_start
         ),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
-        range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
+        range_end: cn("rounded-r-md", defaultClassNames.range_end), // Hapus 'bg-accent'
         today: cn(
-          "bg-accent h-full text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          "text-accent-foreground", // Hapus 'bg-accent' dan 'h-full'
           defaultClassNames.today
         ),
+        // -----------------------------------------------------
         outside: cn(
           "text-muted-foreground aria-selected:text-muted-foreground",
           defaultClassNames.outside
@@ -181,11 +183,19 @@ function CalendarDayButton({ className, day, modifiers, ...props }) {
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 
+  // Cek apakah tanggal ini sedang dipilih (dalam artian yang harus berwarna Primary)
+  // Kita anggap "Selected" jika dia selected-single, range-start, atau range-end.
+  const isSelectedPrimary =
+    (modifiers.selected && !modifiers.range_middle) ||
+    modifiers.range_start ||
+    modifiers.range_end;
+
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
+      data-today={modifiers.today}
       data-day={day.date.toLocaleDateString()}
       data-selected-single={
         modifiers.selected &&
@@ -197,7 +207,38 @@ function CalendarDayButton({ className, day, modifiers, ...props }) {
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
+        // Base Layout
+        "flex aspect-square h-9 w-9 m-auto flex-col gap-1 leading-none font-normal relative",
+
+        // Z-Index Management (Primary harus paling atas)
+        "data-[selected-single=true]:z-20 data-[range-start=true]:z-20 data-[range-end=true]:z-20",
+
+        // --- LOGIC WARNA ---
+
+        // 1. Warna PRIMARY (Harus Menang)
+        // Gunakan !bg-primary untuk memaksa prioritas jika terjadi bentrok
+        "data-[selected-single=true]:!bg-primary data-[selected-single=true]:text-primary-foreground",
+        "data-[range-start=true]:!bg-primary data-[range-start=true]:text-primary-foreground",
+        "data-[range-end=true]:!bg-primary data-[range-end=true]:text-primary-foreground",
+
+        // 2. Warna Range Middle (Accent)
+        "data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground",
+
+        // 3. Warna TODAY (Gray)
+        // Kita gunakan logic JS: Hanya apply warna Gray jika hari ini TIDAK sedang dipilih (Primary).
+        modifiers.today &&
+          !isSelectedPrimary &&
+          "bg-accent text-accent-foreground",
+
+        // Focus Ring
+        "group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
+        "dark:hover:text-accent-foreground",
+
+        // Border Radius Logic
+        "data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md",
+
+        "[&>span]:text-xs [&>span]:opacity-70",
+
         defaultClassNames.day,
         className
       )}

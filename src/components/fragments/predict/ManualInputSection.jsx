@@ -389,11 +389,11 @@ export const ManualInputSection = ({
                 <p className="text-xs text-gray-500 mb-2">
                   Scan entire fleet for Critical and Warning statuses.
                 </p>
-                <div className="grid  gap-4">
-                  {/* <div className="bg-white p-3 rounded-lg border shadow-sm">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-3 rounded-lg border shadow-sm">
                     <span className="text-xs text-gray-400">Target</span>
                     <p className="font-bold text-sm">All Machines</p>
-                  </div> */}
+                  </div>
                   <div className="bg-white p-3 w-full rounded-lg border shadow-sm">
                     <span className="text-xs text-gray-400">Filter</span>
                     <p className="font-bold text-sm">Critical & Warning</p>
