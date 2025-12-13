@@ -16,7 +16,7 @@ import {
 const ML_API_URL =
   "https://machinelearning-production-344f.up.railway.app/dashboard/machines?status=Critical&status=Warning";
 
-const DashboardNavbar = ({ onToggleSidebar, title, onLogout }) => {
+const DashboardNavbar = ({ onToggleSidebar, title}) => {
   const [userData, setUserData] = useState({
     name: "Loading...",
     role: "Team",
@@ -265,7 +265,7 @@ const DashboardNavbar = ({ onToggleSidebar, title, onLogout }) => {
 
         {/* PROFIL USER */}
         <div
-          onClick={onLogout}
+          // onClick={onLogout}
           className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-all border border-transparent hover:border-gray-200"
         >
           <img
