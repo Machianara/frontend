@@ -191,7 +191,7 @@ export const ManualInputSection = ({
     // --- FIX LOGIC DETEKSI INTENT ---
     const lowerQuery = forecastQuery.toLowerCase();
 
-    // 1. Keyword Perintah Jelas (Bisa pakai includes karena frasanya unik)
+    // 1. Keyword Perintah Jelas
     const explicitCommands = [
       "buatkan ticket",
       "buatkan tiket",
@@ -201,32 +201,55 @@ export const ManualInputSection = ({
       "buat tiket",
       "create issue",
       "submit ticket",
-      "ya buatkan tiket",
-      "ya buatkan",
     ];
 
-    // 2. Keyword Persetujuan (Harus dicek per kata agar "saya" != "ya")
-    const agreementWords = ["ya buatkan tiket", "Create ticket"];
+    const agreementWords = [
+      "ya",
+      "yes",
+      "oke",
+      "ok",
+      "setuju",
+      "nggih",
+      "iyo",
+      "y",
+      "izinn",
+      "izin",
+    ];
 
     // Cek Perintah Eksplisit
     const hasExplicitCommand = explicitCommands.some((cmd) =>
       lowerQuery.includes(cmd)
     );
 
-    // Cek Kata Persetujuan (Tokenization: Pecah kalimat jadi kata)
+    // Cek Kata Persetujuan (Tokenization)
     const words = lowerQuery.split(/[\s,?!.]+/).filter((w) => w.length > 0);
     const hasAgreementWord = words.some((word) =>
       agreementWords.includes(word)
     );
 
-    // LOGIC: Buat tiket jika (Ada Perintah Jelas) ATAU (Ada kata setuju DAN kalimatnya pendek)
-    // Kalimat panjang seperti "gimana jika mesin saya..." tidak akan masuk kondisi ini.
-    const isAutoTicketIntent =
+    // 3. Apakah User Berniat Membuat Tiket?
+    // (Ada Perintah Jelas) ATAU (Ada kata setuju DAN kalimatnya pendek)
+    const isTicketIntent =
       hasExplicitCommand || (hasAgreementWord && words.length <= 6);
 
-    // JIKA NIAT TERDETEKSI -> LANGSUNG BUAT TIKET (TANPA MODAL)
-    if (isAutoTicketIntent) {
-      setIsForecastLoading(true); // Tampilkan loading di tombol AI
+    // 4. CEK KONTEKS: Apakah sudah ada history forecast?
+    const hasPriorContext = forecastCache && forecastCache[selectedId];
+
+    // --- LOGIC UTAMA ---
+
+    // KASUS A: User minta tiket TAPI belum simulasi
+    if (isTicketIntent && !hasPriorContext) {
+      showModal(
+        "error",
+        "Simulation Required",
+        "Please run a simulation/prediction first before creating a ticket."
+      );
+      return; // Stop disini
+    }
+
+    // KASUS B: User minta tiket DAN sudah simulasi -> AUTO CREATE
+    if (isTicketIntent && hasPriorContext) {
+      setIsForecastLoading(true);
 
       try {
         // Ambil Token
@@ -264,7 +287,7 @@ export const ManualInputSection = ({
 
         if (!response.ok) throw new Error("Gagal membuat tiket otomatis.");
 
-        // Sukses - Gunakan styling modal sukses
+        // Sukses
         showModal("success", "Success", "Ticket Created Automatically by AI!");
         setForecastQuery(""); // Reset input
       } catch (error) {
@@ -273,10 +296,10 @@ export const ManualInputSection = ({
         setIsForecastLoading(false);
       }
 
-      return; // Stop disini, jangan panggil forecast lagi
+      return; // Stop disini
     }
 
-    // --- LOGIKA NORMAL (Forecast AI) ---
+    // KASUS C: Tidak ada niat tiket (Pertanyaan biasa) -> JALANKAN FORECAST AI
     setIsForecastLoading(true);
 
     try {

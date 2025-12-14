@@ -1,4 +1,4 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import Logo from "/logo-dashboard.png";
@@ -20,11 +20,10 @@ import SettingsActive from "/settings-icon-active.svg";
 
 
 import NavigationItem from "../elements/navigation/navigationItem";
-import LocaleContext from "../../contexts/LocaleContext";
-import content from "../../utils/content";
+
 
 const Sidebar = ({ isSidebarOpen, closeSidebar, onLogout }) => {
-  const { locale } = useContext(LocaleContext);
+
 
   const navItems = [
     {

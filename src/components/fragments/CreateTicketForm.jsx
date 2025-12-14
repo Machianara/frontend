@@ -23,11 +23,11 @@ import { DatePicker } from "@/components/ui/DatePicker";
 
 // Impor Context dan Content
 import LocaleContext from "@/contexts/LocaleContext";
-import content from "@/utils/content";
+
 
 const CreateTicketForm = () => {
   // 1. Ambil locale dari Context
-  const { locale } = useContext(LocaleContext);
+
 
   // --- STATE MANAGEMENT ---
   const [isLoading, setIsLoading] = useState(false);
