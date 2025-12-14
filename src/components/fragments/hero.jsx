@@ -11,9 +11,9 @@ const Hero = () => {
           Predictive Maintenance Copilot
         </h1>
         <p className="text-center md:text-start">
-          Our digital marketing agency helps businesses grow and succeed online
-          through a range of services including SEO, PPC, social media
-          marketing, and content creation.
+          Machinara helps operation teams prevent downtime and reduce costs
+          through intelligent solutions including AI-Driven Insights, Predictive
+          Maintenance, and Real-time Anomaly Detection.
         </p>
         <Link to="/login">
           <Buttons className={"buttonAnimate"} text={`Go to Our System`} />

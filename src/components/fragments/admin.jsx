@@ -45,7 +45,7 @@ const Admin = () => {
     isOpen: false,
     title: "",
     message: "",
-    type: "success", 
+    type: "success",
   });
 
   const [deleteConfirm, setDeleteConfirm] = useState({
@@ -116,6 +116,7 @@ const Admin = () => {
   };
 
   // --- 3. SUBMIT (CREATE & UPDATE) ---
+  // --- 3. SUBMIT (CREATE & UPDATE) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -139,6 +140,7 @@ const Admin = () => {
     setIsLoading(true);
     try {
       if (isEditing) {
+        // --- LOGIC EDIT (Tetap sama) ---
         const updatePayload = {
           name: formData.name,
           biography: formData.biography || "Pegawai",
@@ -158,11 +160,14 @@ const Admin = () => {
 
         showAlert("Berhasil", "Data pegawai berhasil diperbarui!", "success");
       } else {
-        // --- POST (Create - Step 1) ---
+        // --- LOGIC CREATE (DIPERBAIKI) ---
+
+        // 1. Masukkan biography ke payload awal (Coba kirim langsung)
         const createPayload = {
           name: formData.name,
           phone: formData.phone,
           password: formData.password,
+          biography: formData.biography || "Pegawai", // Tambahkan ini
         };
 
         const createResponse = await fetch(`${BASE_URL}/create-account`, {
@@ -177,27 +182,28 @@ const Admin = () => {
           throw new Error(createResult.message || "Gagal membuat akun");
         }
 
-        // --- POST (Create - Step 2: Auto Update Bio) ---
-        if (formData.biography) {
-          const usersResponse = await fetch(`${BASE_URL}/users`, {
-            headers: headers,
-          });
-          const usersResult = await usersResponse.json();
-          const newUser = usersResult.data.find(
-            (u) => u.phone === formData.phone
-          );
+        // --- STEP 2: UPDATE BIO (JAGA-JAGA) ---
+        // Jika Backend Anda di endpoint /create-account mengabaikan field biography,
+        // Kita lakukan update manual. TAPI, kita pakai ID dari response createResult
+        // supaya lebih akurat & cepat daripada fetch semua user.
 
-          if (newUser) {
-            const bioPayload = {
-              name: formData.name,
-              biography: formData.biography,
-            };
-            await fetch(`${BASE_URL}/users/${newUser.id}`, {
-              method: "PUT",
-              headers: headers,
-              body: JSON.stringify(bioPayload),
-            });
-          }
+        // Cek apakah createResult mengembalikan data user baru beserta ID-nya?
+        // Biasanya formatnya: { message: "...", data: { id: 123, ... } }
+        const newUserId =
+          createResult.data?.id || createResult.user?.id || createResult.id;
+
+        if (newUserId && formData.biography) {
+          const bioPayload = {
+            name: formData.name,
+            biography: formData.biography,
+          };
+
+          // Langsung tembak endpoint update user by ID
+          await fetch(`${BASE_URL}/users/${newUserId}`, {
+            method: "PUT",
+            headers: headers,
+            body: JSON.stringify(bioPayload),
+          });
         }
 
         showAlert("Berhasil", "Pegawai baru berhasil ditambahkan!", "success");
@@ -220,7 +226,7 @@ const Admin = () => {
   // Tahap 2: Eksekusi Delete (Saat tombol 'Ya' ditekan)
   const proceedDelete = async () => {
     const id = deleteConfirm.idToDelete;
-    setDeleteConfirm({ isOpen: false, idToDelete: null }); 
+    setDeleteConfirm({ isOpen: false, idToDelete: null });
 
     const headers = getAuthHeaders();
     if (!headers) return;
@@ -332,7 +338,7 @@ const Admin = () => {
                       isEditing ? "bg-gray-100 text-gray-500" : ""
                     }`}
                     readOnly={isEditing}
-                    disabled={isLoading} 
+                    disabled={isLoading}
                   />
                   {isEditing && (
                     <p className="text-xs text-gray-400 mt-1">
@@ -472,7 +478,7 @@ const Admin = () => {
                             </button>
                             {emp.role !== "admin" && (
                               <button
-                                onClick={() => initiateDelete(emp.id)} 
+                                onClick={() => initiateDelete(emp.id)}
                                 className="inline-flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-md transition"
                                 title="Hapus"
                               >

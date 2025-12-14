@@ -14,7 +14,7 @@ import {
 
 const LOGIN_URL = "https://backend-dev-service.up.railway.app/auth/login";
 
-// --- FUNGSI DECODE YANG LEBIH KUAT ---
+// --- FUNGSI DECODE (Hanya untuk backup/pengecekan role) ---
 const parseJwt = (token) => {
   try {
     const base64Url = token.split(".")[1];
@@ -28,7 +28,6 @@ const parseJwt = (token) => {
         })
         .join("")
     );
-
     return JSON.parse(jsonPayload);
   } catch (e) {
     console.error("Gagal decode token:", e);
@@ -41,7 +40,6 @@ const FormLogin = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-
   const [debugInfo, setDebugInfo] = useState("");
 
   const phoneRef = useRef(null);
@@ -91,22 +89,31 @@ const FormLogin = () => {
       // 1. Simpan Token
       localStorage.setItem("token", token);
 
-      // 2. Decode Token
-      const decodedUser = parseJwt(token);
+      // --- PERBAIKAN UTAMA DISINI ---
+      // Jangan ambil dari parseJwt(token) karena biografi tidak ada di token.
+      // Ambil dari data.user (atau data.data) yang dikirim backend.
 
-      // Simpan User Data
-      if (decodedUser) {
-        localStorage.setItem("user_data", JSON.stringify(decodedUser));
-      }
+      const userDataLengkap = data.user || data.data;
+
+      // Backup: Kalau backend ga kirim object user, baru pake token (tapi bio bakal kosong)
+      const finalUserToSave = userDataLengkap || parseJwt(token);
+
+      console.log("Menyimpan Data User Lengkap:", finalUserToSave);
+
+      localStorage.setItem("user_data", JSON.stringify(finalUserToSave));
+      // -----------------------------
 
       // 3. SIAPKAN LOGIKA PENGECEKAN
-      const role = decodedUser?.role?.toLowerCase() || "tidak-ada-role";
-      const phone = decodedUser?.phone || phoneInput;
+      const decodedToken = parseJwt(token); // Decode cuma buat cek role/exp
+      const role =
+        finalUserToSave?.role?.toLowerCase() || decodedToken?.role || "user";
+      const phone = finalUserToSave?.phone || phoneInput;
 
       // --- DEBUGGING MESSAGE ---
-      const info = `Role: ${role} | Phone: ${phone}`;
+      const info = `Role: ${role} | Bio: ${
+        finalUserToSave?.biography || "Kosong"
+      }`;
       setDebugInfo(info);
-      console.log("DEBUG INFO:", decodedUser);
 
       // 4. Buka Modal Sukses
       setIsSuccessModalOpen(true);
@@ -116,10 +123,9 @@ const FormLogin = () => {
         if (role.includes("admin") || phone === "081234567890") {
           window.location.href = "/admin";
         } else {
-          // Jika bukan admin, masuk dashboard
           window.location.href = "/dashboard";
         }
-      }, 2000); // Delay 2 detik biar sempat baca alert
+      }, 2000);
     } catch (error) {
       console.error("Login Error:", error);
       setErrorMessage(error.message);
@@ -192,16 +198,11 @@ const FormLogin = () => {
               Login Successful
             </DialogTitle>
             <DialogDescription className="text-center text-gray-700">
-              <span className="block font-mono text-xs bg-gray-100 p-2 rounded mt-2 border">
-                System Check: {debugInfo}
+              <span className="block font-mono text-xs bg-gray-100 p-2 rounded mt-2 border break-all">
+                {debugInfo}
               </span>
               <span className="block mt-2 font-bold text-blue-600">
-                Redirecting to{" "}
-                {debugInfo.includes("admin") ||
-                debugInfo.includes("081234567890")
-                  ? "ADMIN"
-                  : "DASHBOARD"}
-                ...
+                Redirecting...
               </span>
             </DialogDescription>
           </DialogHeader>

@@ -22,13 +22,10 @@ import ChatAi from "./Pages/ChatAI";
 import Settings from "./Pages/Settings";
 import AdminPage from "./Pages/AdminPage";
 
-// Impor ChatCopilot
 import ChatCopilot from "./components/fragments/chatCopilot";
 
-// Impor Smooth Scroll
 import SmoothScroll from "./components/fragments/lenis";
 
-// --- 2. KOMPONEN PROTECTED ROUTE (SATPAM) ---
 const ProtectedRoute = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -37,12 +34,10 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
-// --- 1. KOMPONEN LAYOUT UTAMA ---
 const RootLayout = () => {
   const location = useLocation();
   const path = location.pathname;
 
-  // 1. Logika ChatCopilot (Sembunyikan di halaman ini)
   const hideChatPaths = [
     "/chatai",
     "/login",
@@ -56,8 +51,6 @@ const RootLayout = () => {
   ];
   const shouldShowChat = !hideChatPaths.includes(path);
 
-  // 2. Logika Smooth Scroll (MATIKAN di halaman dashboard/admin)
-  // Kita matikan Lenis di halaman ini agar scroll dashboard tidak macet
   const disableSmoothScrollPaths = [
     "/dashboard",
     "/admin",
@@ -69,8 +62,6 @@ const RootLayout = () => {
     "/login",
   ];
 
-  // Cek apakah URL saat ini ada di daftar "disable"
-  // .some() & .startsWith() memastikan sub-menu seperti /dashboard/profile juga kena
   const isSmoothScrollDisabled = disableSmoothScrollPaths.some((p) =>
     path.startsWith(p)
   );
@@ -83,13 +74,10 @@ const RootLayout = () => {
     </>
   );
 
-  // --- KEPUTUSAN FINAL ---
-  // Jika ini halaman Dashboard -> Render biasa (Native Scroll)
   if (isSmoothScrollDisabled) {
     return <div className="native-scroll-layout">{content}</div>;
   }
 
-  // Jika ini halaman Home/Landing -> Bungkus dengan SmoothScroll
   return <SmoothScroll>{content}</SmoothScroll>;
 };
 
@@ -98,12 +86,11 @@ function App() {
     {
       element: <RootLayout />,
       children: [
-        { path: "/", element: <Home /> }, // Ini akan kena Smooth Scroll
+        { path: "/", element: <Home /> }, 
         { path: "/login", element: <Login /> },
         {
           element: <ProtectedRoute />,
           children: [
-            // Semua di bawah ini pakai Native Scroll (Aman dari macet)
             { path: "/dashboard", element: <Dashboard /> },
             { path: "/predict", element: <Predict /> },
             { path: "/ticketing", element: <Ticketing /> },

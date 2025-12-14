@@ -7,39 +7,39 @@ import { Card, CardContent } from "../ui/card";
 const processData = [
   {
     id: "01",
-    title: "Consultation",
+    title: "Operational Assessment",
     description:
-      "During the initial consultation, we will discuss your business goals and objectives, target audience, and current marketing efforts. This will allow us to understand your needs and tailor our services to best fit your requirements.",
+      "We begin by discussing your critical assets, maintenance pain points, and operational goals. This helps us identify which machines require monitoring and determine the appropriate sensor configurations.",
   },
   {
     id: "02",
-    title: "Research and Strategy Development",
+    title: "Integration Strategy",
     description:
-      "Once we have a clear understanding of your needs, we will conduct in-depth research and analysis to develop a customized digital marketing strategy for your business.",
+      "Once requirements are clear, we design a data integration plan. We analyze your existing PLC/SCADA infrastructure or recommend compatible IoT sensors to ensure seamless connectivity with Machinara.",
   },
   {
     id: "03",
-    title: "Implementation",
+    title: "Deployment & Calibration",
     description:
-      "Our team will execute the agreed-upon strategy, implementing various digital marketing tactics such as SEO, PPC, social media marketing, and content marketing.",
+      "Our team connects your machinery to the Machinara cloud. During this phase, our AI establishes a 'baseline' of normal behavior for each machine to ensure accurate anomaly detection later.",
   },
   {
     id: "04",
-    title: "Monitoring and Optimization",
+    title: "Real-time Monitoring",
     description:
-      "We will continuously monitor the performance of your campaigns, making data-driven adjustments to optimize for better results and ensure maximum ROI.",
+      "The system goes live. Machinara continuously monitors vibration, temperature, and acoustic data 24/7, using predictive algorithms to spot the slightest deviations in performance.",
   },
   {
     id: "05",
-    title: "Reporting and Communication",
+    title: "Alerts & Insights",
     description:
-      "You will receive regular reports detailing campaign performance, and we will maintain open communication to keep you informed of our progress and any recommendations.",
+      "Instead of generic reports, you receive actionable maintenance tickets. We provide detailed health forecasts and alerts, keeping your team informed of potential failures before they happen.",
   },
   {
     id: "06",
-    title: "Continual Improvement",
+    title: "Adaptive Learning",
     description:
-      "Digital marketing is always evolving, and so are we. We are committed to staying up-to-date with the latest trends and best practices to ensure your long-term success.",
+      "Your machine health models improve over time. By incorporating feedback from your technicians after repairs, Machinara’s AI refines its accuracy to reduce false alarms and optimize maintenance schedules.",
   },
 ];
 
@@ -109,7 +109,7 @@ const AccordionSupport = ({ className }) => {
           />
         ))}{" "}
       </div>{" "}
-      <Card className="flex flex-col gap-16 text-center sm:text-start sm:px-20 justify-center">
+      <Card className="flex flex-col gap-16 text-center sm:text-start md:px-10 lg:px-20 justify-center">
         <CardContent className="flex flex-col gap-16 justify-center items-center">
           <div className="flex flex-col gap-6 justify-center items-center">
             <img className="w-fit" src={Helpme} alt="" />

@@ -90,7 +90,7 @@ const Home = () => {
       </div>
       <TitleContent
         title={`Services`}
-        title2={`At our digital marketing agency, we offer a range of services to help businesses grow and succeed online. These services include:`}
+        title2={`Machinara optimizes machine health through AI-driven monitoring, predictive analytics, and automated ticketing to prevent downtime.`}
       />
       <section
         id="services"
@@ -173,19 +173,19 @@ const Home = () => {
         id="works"
         className={`max-w-[292px]!`}
         title={`Our Working Process `}
-        title2={`Step-by-Step Guide to Achieving Your Business Goals`}
+        title2={`Instantly link Machinara to your machine sensors.`}
       />
       <WorkingProcess className={`pt-12 md:pt-20`} />
       <TitleContent
         className={`max-w-[473px]!`}
         title={`Team`}
-        title2={`Meet the skilled and experienced team behind our successful digital marketing strategies`}
+        title2={`Meet the innovators, data scientists, and engineers dedicated to driving the future of industrial reliability.`}
       />
       <CardTeam />
       <TitleContent
         className={`max-w-[473px]!`}
         title={`Testimonials`}
-        title2={`Hear from Our Satisfied Clients: Read Our Testimonials to Learn More about Our Digital Marketing Services`}
+        title2={`Hear from industry leaders who trust Machinara to eliminate downtime.`}
       />
       <Testimonial id="testimoni" className={`pt-14 md:pt-20`} />
       <TitleContent

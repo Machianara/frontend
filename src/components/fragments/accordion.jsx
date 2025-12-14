@@ -4,39 +4,39 @@ import { useState } from "react";
 const processData = [
   {
     id: "01",
-    title: "Consultation",
+    title: "System Assessment",
     description:
-      "During the initial consultation, we will discuss your business goals and objectives, target audience, and current marketing efforts. This will allow us to understand your needs and tailor our services to best fit your requirements.",
+      "We begin by analyzing your critical machinery and operational goals to identify the right sensor configurations and data points needed for accurate monitoring.",
   },
   {
     id: "02",
-    title: "Research and Strategy Development",
+    title: "Integration & Connectivity",
     description:
-      "Once we have a clear understanding of your needs, we will conduct in-depth research and analysis to develop a customized digital marketing strategy for your business.",
+      "Seamlessly connect your existing machine sensors (PLC/SCADA) to Machinara’s cloud platform, or deploy our IoT devices for a quick, plug-and-play setup.",
   },
   {
     id: "03",
-    title: "Implementation",
+    title: "AI Model Calibration",
     description:
-      "Our team will execute the agreed-upon strategy, implementing various digital marketing tactics such as SEO, PPC, social media marketing, and content marketing.",
+      "During this phase, our AI establishes a 'baseline' of normal machine behavior. It learns your equipment's unique vibration and thermal patterns to distinguish healthy operations from anomalies.",
   },
   {
     id: "04",
-    title: "Monitoring and Optimization",
+    title: "Real-time Monitoring",
     description:
-      "We will continuously monitor the performance of your campaigns, making data-driven adjustments to optimize for better results and ensure maximum ROI.",
+      "Machinara goes live, monitoring your assets 24/7. Our algorithms continuously scan for deviations in vibration, temperature, and acoustics to detect early signs of failure.",
   },
   {
     id: "05",
-    title: "Reporting and Communication",
+    title: "Alerts & Actionable Reporting",
     description:
-      "You will receive regular reports detailing campaign performance, and we will maintain open communication to keep you informed of our progress and any recommendations.",
+      "When an anomaly is detected, the system instantly generates a detailed maintenance ticket and notifies your team via dashboard or email, ensuring no issue goes unnoticed.",
   },
   {
     id: "06",
-    title: "Continual Improvement",
+    title: "Adaptive Learning",
     description:
-      "Digital marketing is always evolving, and so are we. We are committed to staying up-to-date with the latest trends and best practices to ensure your long-term success.",
+      "The system gets smarter over time. By incorporating feedback from your maintenance team after repairs, Machinara refines its predictive models to reduce false alarms and increase accuracy",
   },
 ];
 
