@@ -79,7 +79,7 @@ const Sidebar = ({ isSidebarOpen, closeSidebar, onLogout }) => {
 
   return (
     <div
-      className={`fixed inset-y-0 flex flex-col bg-white gap-14 left-0 px-[46px] pt-[45px] w-[345px] transform transition-transform duration-300 ease-in-out z-30 
+      className={`fixed inset-y-0 flex flex-col bg-white gap-14 left-0 px-7 lg:px-[46px] pt-[30px] w-[280px] lg:w-[345px] transform transition-transform duration-300 ease-in-out z-30 
                   md:relative md:translate-x-0 
                   ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
@@ -102,7 +102,7 @@ const Sidebar = ({ isSidebarOpen, closeSidebar, onLogout }) => {
         </button>
       </div>
 
-      <ul className="flex flex-col gap-6 grow">
+      <ul className="flex flex-col gap-4 grow">
         {navItems.map((item) => (
           <li key={item.id}>
             <NavLink

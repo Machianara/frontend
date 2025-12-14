@@ -14,6 +14,7 @@ import {
 
 // --- Helper Icon ---
 const AlertIcon = ({ type }) => {
+  // Karena sekarang cuma critical, icon merah ini yang akan selalu muncul
   if (type === "critical" || type === "high")
     return <AlertTriangle className="h-5 w-5 text-red-500" />;
   if (type === "maintenance" || type === "warning")
@@ -26,11 +27,11 @@ const AlertIcon = ({ type }) => {
 const AlertFeed = () => {
   const [allAlerts, setAllAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false); // State untuk loading data tambahan
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // STATE PAGINATION
   const [page, setPage] = useState(1);
-  const [hasMoreData, setHasMoreData] = useState(true); // Cek apakah data di server masih ada
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   const [activeAlerts, setActiveAlerts] = useState([]);
   const [queueAlerts, setQueueAlerts] = useState([]);
@@ -43,12 +44,7 @@ const AlertFeed = () => {
       if (a.isAcknowledged !== b.isAcknowledged) {
         return a.isAcknowledged ? 1 : -1;
       }
-      // 2. Prioritas Kedua: Critical > Warning
-      if (a.status !== b.status) {
-        if (a.status === "critical") return -1;
-        if (b.status === "critical") return 1;
-      }
-      // 3. Prioritas Ketiga: Health Score Terendah
+      // 2. Prioritas Kedua: Health Score Terendah (Makin rusak makin atas)
       return a.healthScore - b.healthScore;
     });
   };
@@ -61,16 +57,17 @@ const AlertFeed = () => {
     setUnreadCount(data.filter((a) => !a.isAcknowledged).length);
   };
 
-  // --- FUNGSI FETCH DATA (BISA UNTUK HALAMAN PERTAMA MAUPUN SELANJUTNYA) ---
+  // --- FUNGSI FETCH DATA ---
   const fetchAlerts = async (pageNum, isLoadMore = false) => {
     try {
       if (isLoadMore) setLoadingMore(true);
       else setLoading(true);
 
-      // KEMBALIKAN LIMIT JADI 20 (Agar ringan load per batch)
-      // Tapi kita mainkan PAGE nya.
+      // --- PERUBAHAN DISINI ---
+      // Menghapus 'status=Warning'. Hanya 'status=Critical'.
+      // Tetap menggunakan limit=20 & page agar fitur auto-refill bekerja lancar.
       const response = await fetch(
-        `https://machinelearning-production-344f.up.railway.app/dashboard/machines?status=Critical&status=Warning&limit=20&page=${pageNum}`
+        `https://machinelearning-production-344f.up.railway.app/dashboard/machines?status=Critical&limit=20&page=${pageNum}`
       );
       const rawData = await response.json();
       const dataList = Array.isArray(rawData) ? rawData : rawData.data || [];
@@ -94,9 +91,8 @@ const AlertFeed = () => {
       }));
 
       setAllAlerts((prev) => {
-        // GABUNGKAN DATA LAMA + DATA BARU (Cegah duplikat id jika ada)
         const combined = isLoadMore ? [...prev, ...mappedData] : mappedData;
-        // Filter unik berdasarkan ID (jaga-jaga API kirim duplikat)
+        // Filter unik ID
         const unique = combined.filter(
           (v, i, a) => a.findIndex((t) => t.id === v.id) === i
         );
@@ -119,27 +115,24 @@ const AlertFeed = () => {
 
   // --- HANDLE ACKNOWLEDGE (DENGAN AUTO REFILL) ---
   const handleAcknowledge = (id) => {
-    // 1. Update status 'Done'
     const updatedAlerts = allAlerts.map((alert) =>
       alert.id === id ? { ...alert, isAcknowledged: true } : alert
     );
     setAllAlerts(updatedAlerts);
     refreshViews(updatedAlerts);
 
-    // 2. CEK JUMLAH SISA UNREAD
+    // LOGIKA REFILL OTOMATIS
     const remainingUnread = updatedAlerts.filter(
       (a) => !a.isAcknowledged
     ).length;
 
-    // 3. LOGIKA REFILL OTOMATIS:
-    // Jika sisa yang belum dibaca kurang dari 5, DAN masih ada data di server, DAN tidak sedang loading
     if (remainingUnread < 5 && hasMoreData && !loadingMore) {
       const nextPage = page + 1;
-      setPage(nextPage); // Naikkan counter halaman
+      setPage(nextPage);
       console.log(
-        `Queue menipis (${remainingUnread} sisa). Mengambil data halaman ${nextPage}...`
+        `Queue menipis (${remainingUnread} sisa). Mengambil data Critical halaman ${nextPage}...`
       );
-      fetchAlerts(nextPage, true); // Fetch halaman berikutnya
+      fetchAlerts(nextPage, true);
     }
   };
 
@@ -148,7 +141,7 @@ const AlertFeed = () => {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center gap-3">
           <Bell className="h-5 w-5 text-gray-500" />
-          <CardTitle className="text-lg font-bold">Alert Feed</CardTitle>
+          <CardTitle className="text-lg font-bold">Critical Alerts</CardTitle>
         </div>
         <Badge
           variant="secondary"
@@ -163,7 +156,6 @@ const AlertFeed = () => {
         <div>
           <h3 className="text-sm font-semibold text-red-500 mb-3 flex justify-between items-center">
             <span>Highest Priority</span>
-            {/* Indikator Loading Kecil saat Auto-Refill */}
             {loadingMore && (
               <span className="text-[10px] flex items-center gap-1 text-gray-400">
                 <Loader2 className="w-3 h-3 animate-spin" /> Fetching more...
@@ -178,7 +170,7 @@ const AlertFeed = () => {
               </div>
             ) : activeAlerts.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-2">
-                All priority alerts handled.
+                All critical alerts handled.
               </p>
             ) : (
               activeAlerts.map((alert) => (
@@ -187,9 +179,7 @@ const AlertFeed = () => {
                   className={`flex flex-row p-4 rounded-lg transition-all duration-500 ease-in-out ${
                     alert.isAcknowledged
                       ? "bg-gray-50 border-gray-200 opacity-60 translate-y-2"
-                      : alert.status === "critical"
-                      ? "border-red-200 bg-red-50"
-                      : "border-yellow-200 bg-yellow-50"
+                      : "border-red-200 bg-red-50" // Selalu merah karena critical
                   }`}
                 >
                   <div className="shrink-0 mr-4 mt-1">
@@ -215,11 +205,7 @@ const AlertFeed = () => {
                       {!alert.isAcknowledged && (
                         <Badge
                           variant="destructive"
-                          className={`text-[10px] sm:text-xs px-2 py-0.5 h-fit capitalize ${
-                            alert.status === "critical"
-                              ? "bg-red-700 hover:bg-red-700"
-                              : "bg-yellow-600 hover:bg-yellow-600"
-                          }`}
+                          className="text-[10px] sm:text-xs px-2 py-0.5 h-fit capitalize bg-red-700 hover:bg-red-700"
                         >
                           {alert.status}
                         </Badge>
@@ -307,13 +293,7 @@ const AlertFeed = () => {
 
                   <div className="ml-auto self-start">
                     {!alert.isAcknowledged && (
-                      <span
-                        className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full ${
-                          alert.status === "critical"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-yellow-100 text-yellow-600"
-                        }`}
-                      >
+                      <span className="text-[10px] uppercase font-bold px-2 py-1 rounded-full bg-red-100 text-red-600">
                         {alert.status}
                       </span>
                     )}

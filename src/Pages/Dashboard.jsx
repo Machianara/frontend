@@ -7,7 +7,7 @@ import MixBarChart from "@/components/fragments/chart";
 const Dashboard = () => {
   return (
     <AppLayout>
-      <div className="flex flex-col gap-6 py-6 relative">
+      <div className="flex flex-col gap-6 pt-6 pb-20 relative">
         <AssetHealthOverview />
         <AlertFeed />
         <MixBarChart />

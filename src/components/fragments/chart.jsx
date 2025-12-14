@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// --- KONFIGURASI API ---
 const API_URL = "https://backend-dev-service.up.railway.app/api/tickets";
 
 const MixBarChart = () => {
@@ -48,33 +47,25 @@ const MixBarChart = () => {
   // --- 2. OLAH DATA (JAN - DES) ---
   const chartData = useMemo(() => {
     const months = [];
-    const currentYear = new Date().getFullYear(); // Ambil tahun saat ini (misal: 2025)
+    const currentYear = new Date().getFullYear();
 
-    // --- PERUBAHAN DISINI: Loop Tetap dari 0 (Jan) s/d 11 (Des) ---
     for (let i = 0; i < 12; i++) {
-      const d = new Date(currentYear, i, 1); // Tahun ini, Bulan ke-i, Tanggal 1
-
+      const d = new Date(currentYear, i, 1);
       months.push({
-        monthIndex: i, // 0 = Jan, 1 = Feb, dst
+        monthIndex: i,
         year: currentYear,
-        name: d.toLocaleString("id-ID", { month: "long" }), // "Januari", "Februari"
+        name: d.toLocaleString("id-ID", { month: "long" }),
         total: 0,
       });
     }
 
-    // B. Mapping Data (Tetap Prioritaskan 'date')
     tickets.forEach((ticket) => {
       const rawDate = ticket.date || ticket.createdAt || ticket.created_at;
-
       if (!rawDate) return;
 
       const ticketDate = new Date(rawDate);
-
-      // Validasi tanggal
       if (isNaN(ticketDate.getTime())) return;
 
-      // Cari bulan yang cocok
-      // Kita mencocokkan bulan DAN tahun agar data tahun lalu tidak masuk ke grafik tahun ini
       const monthData = months.find(
         (m) =>
           m.monthIndex === ticketDate.getMonth() &&
@@ -98,7 +89,8 @@ const MixBarChart = () => {
   }
 
   return (
-    <div style={{ width: "100%", maxHeight: "70vh", aspectRatio: 1.5 }}>
+    // Hapus style width/aspectRatio manual, gunakan class tailwind agar responsif mengikuti parent card
+    <div className="w-full h-[70vh] mt-4">
       <h3 className="text-lg font-bold text-gray-700 mb-4 px-2">
         Statistik Tiket Tahun Ini
       </h3>
@@ -106,29 +98,35 @@ const MixBarChart = () => {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
+          // PERBAIKAN: Margin Kiri Negatif agar mepet ke kiri
           margin={{
-            top: 20,
-            right: 10,
-            left: 10,
-            bottom: 20,
+            top: 5,
+            right: 0,
+            left: -20, // Menarik sumbu Y ke kiri
+            bottom: 0,
           }}
         >
-          {/* Grid Putus-putus */}
           <CartesianGrid
-            strokeDasharray="3 3"
-            vertical={true}
-            stroke="#E5E7EB"
+            strokeDasharray="5 5"
+            vertical={false} // Hapus garis vertikal agar lebih bersih
+            stroke="#D1D5DB"
           />
 
           <XAxis
             dataKey="name"
-            tick={{ fill: "#6B7280", fontSize: 12 }}
-            interval={0} // Agar semua label bulan muncul (tidak di-skip)
-            tickFormatter={(value) => value.substring(0, 3)} // Potong jadi 3 huruf (Jan, Feb, Mar) biar muat
+            tick={{ fill: "#6B7280", fontSize: 10 }} // Font lebih kecil agar muat
+            interval={0}
+            tickFormatter={(value) => value.substring(0, 3)}
             dy={10}
+            axisLine={false} 
+            tickLine={true}
           />
 
-          <YAxis tick={{ fill: "#6B7280", fontSize: 12 }}  />
+          <YAxis
+            tick={{ fill: "#6B7280", fontSize: 10 }}
+            axisLine={false} // Hilangkan garis sumbu kiri
+            tickLine={false}
+          />
 
           <Tooltip
             cursor={{ fill: "#F3F4F6" }}
@@ -150,14 +148,14 @@ const MixBarChart = () => {
             }}
           />
 
-          <Legend wrapperStyle={{ paddingTop: "20px" }} />
+          <Legend wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }} />
 
           <Bar
             dataKey="total"
             name="Total Masuk"
             fill="#1c3347"
-            radius={[4, 4, 0, 0]}
-            barSize={40} // Ukuran bar disesuaikan biar muat 12 bulan
+            // radius={[4, 4, 0, 0]}
+            barSize={40} // Bar lebih ramping agar elegan
           />
         </BarChart>
       </ResponsiveContainer>

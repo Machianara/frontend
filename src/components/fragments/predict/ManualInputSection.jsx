@@ -428,14 +428,14 @@ export const ManualInputSection = ({
                   AI Risk Forecast
                 </h4>
                 {selectedId && (
-                  <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-100">
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded border border-primary/15">
                     Target: <b>{selectedId}</b>
                   </span>
                 )}
               </div>
               <div className="relative">
                 <textarea
-                  className="w-full p-4 pr-12 text-sm border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none min-h-[100px] resize-none transition-all shadow-sm"
+                  className="w-full p-4 pr-12 text-sm border rounded-xl focus:ring-2 focus:ring-primary/15 outline-none min-h-[100px] resize-none transition-all shadow-sm"
                   placeholder="Ask AI or type 'Yes' to create a ticket automatically..."
                   value={forecastQuery}
                   onChange={(e) => setForecastQuery(e.target.value)}
@@ -483,27 +483,6 @@ export const ManualInputSection = ({
                     </>
                   )}
                 </Button>
-
-                {/* Tombol Shortcut Manual Ticket */}
-                {selectedId && (
-                  <Button
-                    variant="outline"
-                    className="py-6 border-dashed border-gray-300 text-gray-500 hover:bg-gray-50"
-                    // onClick={() => {
-                    //   setTicketData({
-                    //     issue: forecastCache?.[selectedId]?.result?.answer
-                    //       ? `Auto: ${forecastCache?.[
-                    //           selectedId
-                    //         ]?.result?.answer.slice(0, 100)}`
-                    //       : "",
-                    //     date: new Date().toISOString().split("T")[0],
-                    //   });
-                    //   setIsTicketModalOpen(true);
-                    // }}
-                  >
-                    <Ticket className="w-5 h-5" />
-                  </Button>
-                )}
               </div>
             </div>
           )}
@@ -513,9 +492,9 @@ export const ManualInputSection = ({
               <h4 className="font-medium text-sm text-gray-700">
                 Machine Identification
               </h4>
-              <div className="relative">
+              <div className="relative ">
                 <textarea
-                  className="w-full p-4 pl-12 text-sm border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none"
+                  className="w-full leading-px resize-none py-8 px-4 pl-12 text-sm border rounded-xl focus:ring-2 focus:ring-primary/15 outline-none"
                   placeholder="Enter Machine ID (e.g., L47441)..."
                   value={machineId}
                   onChange={(e) => setMachineId(e.target.value)}
