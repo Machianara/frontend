@@ -91,14 +91,12 @@ export const ManualInputSection = ({
       // STRATEGI: Fetch Paralel agar Cepat & Akurat
 
       // 1. Request Prioritas: Gabungan Critical & Warning (Sesuai instruksi BE)
-      // Menggunakan limit=50 untuk mengakomodir kebutuhan data (misal 20 Critical + 20 Warning)
       const priorityPromise = fetch(
         "https://machinelearning-production-344f.up.railway.app/dashboard/machines?status=Critical&status=Warning&limit=50",
         { method: "GET", headers: { "Content-Type": "application/json" } }
       );
 
       // 2. Request Sekunder: Ambil Data Normal
-      // UBAH LIMIT JADI 20 (Supaya sinkron dengan Pagination Page 1)
       const normalPromise = fetch(
         "https://machinelearning-production-344f.up.railway.app/dashboard/machines?status=Normal&limit=20",
         { method: "GET", headers: { "Content-Type": "application/json" } }
@@ -190,26 +188,44 @@ export const ManualInputSection = ({
       return;
     }
 
-    // 1. DETEKSI NIAT USER (Intent Detection)
+    // --- FIX LOGIC DETEKSI INTENT ---
     const lowerQuery = forecastQuery.toLowerCase();
-    const ticketKeywords = [
-      "ya",
-      "yes",
-      "buatkan",
-      "ticket",
-      "tiket",
-      "create",
-      "oke",
-      "setuju",
-      "nggih",
-      "iyo",
-      "izinnn",
-      "izinn",
-      "izin",
+
+    // 1. Keyword Perintah Jelas (Bisa pakai includes karena frasanya unik)
+    const explicitCommands = [
+      "buatkan ticket",
+      "buatkan tiket",
+      "create ticket",
+      "bikin tiket",
+      "buat ticket",
+      "buat tiket",
+      "create issue",
+      "submit ticket",
+      "ya buatkan tiket",
+      "ya buatkan",
     ];
 
-    // JIKA USER BILANG "YA" -> LANGSUNG BUAT TIKET (TANPA MODAL)
-    if (ticketKeywords.some((word) => lowerQuery.includes(word))) {
+    // 2. Keyword Persetujuan (Harus dicek per kata agar "saya" != "ya")
+    const agreementWords = ["ya buatkan tiket", "Create ticket"];
+
+    // Cek Perintah Eksplisit
+    const hasExplicitCommand = explicitCommands.some((cmd) =>
+      lowerQuery.includes(cmd)
+    );
+
+    // Cek Kata Persetujuan (Tokenization: Pecah kalimat jadi kata)
+    const words = lowerQuery.split(/[\s,?!.]+/).filter((w) => w.length > 0);
+    const hasAgreementWord = words.some((word) =>
+      agreementWords.includes(word)
+    );
+
+    // LOGIC: Buat tiket jika (Ada Perintah Jelas) ATAU (Ada kata setuju DAN kalimatnya pendek)
+    // Kalimat panjang seperti "gimana jika mesin saya..." tidak akan masuk kondisi ini.
+    const isAutoTicketIntent =
+      hasExplicitCommand || (hasAgreementWord && words.length <= 6);
+
+    // JIKA NIAT TERDETEKSI -> LANGSUNG BUAT TIKET (TANPA MODAL)
+    if (isAutoTicketIntent) {
       setIsForecastLoading(true); // Tampilkan loading di tombol AI
 
       try {
