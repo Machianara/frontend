@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input"; // Pastikan import Input ada
 import { HelpCircle, Loader2 } from "lucide-react";
 
 // --- KONFIGURASI API ---
-const BASE_URL = "https://backend-dev-service.up.railway.app/auth";
+// Menggunakan endpoint /auth karena di Postman path-nya ada di sana
+const API_BASE_URL = "https://backend-dev-service.up.railway.app/auth";
 
 // --- COMPONENT ROW ---
 const SettingRow = ({ label, children, subLabelIcon }) => {
@@ -26,13 +27,14 @@ const DashboardSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
+  // Ref untuk password
   const passwordInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     biography: "",
-    password: "",
+    password: "", // Password kosongkan defaultnya
   });
 
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -50,25 +52,18 @@ const DashboardSettings = () => {
     };
   };
 
-  // ------------------------------------------------------------------
-  // 1. LOAD DATA USER (DARI LOCALSTORAGE) - FIX 403
-  // ------------------------------------------------------------------
   useEffect(() => {
-    // Kita tidak fetch ke /auth/users karena itu endpoint Admin (403 Forbidden buat user biasa)
-    // Kita ambil data dari LocalStorage yang disimpan saat Login
     const loadUserData = () => {
       try {
         const storedUserData = localStorage.getItem("user_data");
 
         if (!storedUserData) {
-          // Jika data hilang, paksa logout/login ulang
           window.location.href = "/login";
           return;
         }
 
         const userObj = JSON.parse(storedUserData);
 
-        // Set State
         setCurrentUserId(userObj.id);
         setFormData({
           name: userObj.name || "",
@@ -76,13 +71,6 @@ const DashboardSettings = () => {
           biography: userObj.biography || "",
           password: "",
         });
-
-        // Autofocus
-        setTimeout(() => {
-          if (passwordInputRef.current) {
-            passwordInputRef.current.focus();
-          }
-        }, 500);
       } catch (error) {
         console.error("Gagal memuat data lokal", error);
       } finally {
@@ -98,9 +86,6 @@ const DashboardSettings = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ------------------------------------------------------------------
-  // 2. SIMPAN PERUBAHAN (PUT)
-  // ------------------------------------------------------------------
   const handleSave = async () => {
     if (!currentUserId) return;
 
@@ -110,41 +95,60 @@ const DashboardSettings = () => {
     setIsLoading(true);
 
     try {
+      // 1. Siapkan Payload (Name & Bio selalu dikirim)
       const updatePayload = {
         name: formData.name,
         biography: formData.biography,
-        ...(formData.password && { password: formData.password }),
       };
 
-      // Endpoint PUT biasanya dibolehkan untuk user mengedit dirinya sendiri
-      const response = await fetch(`${BASE_URL}/users/${currentUserId}`, {
+      // 2. Password hanya dikirim jika diisi (agar tidak mereset password jadi kosong)
+      if (formData.password && formData.password.trim() !== "") {
+        updatePayload.password = formData.password;
+      }
+
+      // 3. Request ke Endpoint Admin (tapi dicoba akses oleh User)
+      // URL: https://backend-dev-service.up.railway.app/auth/users/{id}
+      const response = await fetch(`${API_BASE_URL}/users/${currentUserId}`, {
         method: "PUT",
         headers: headers,
         body: JSON.stringify(updatePayload),
       });
 
+      // 4. Handle Error Spesifik
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || "Gagal update profile");
+
+        // Cek permission error (Admin Only?)
+        if (response.status === 403 || response.status === 401) {
+          throw new Error(
+            "AKSES DITOLAK: Endpoint ini mungkin khusus Admin. Minta Backend Dev untuk membuka akses self-update."
+          );
+        }
+
+        throw new Error(
+          errData.message || `Gagal update (Status: ${response.status})`
+        );
       }
 
       const result = await response.json();
 
-      // Update LocalStorage agar data tetap sinkron saat di-refresh
-      if (result.user) {
-        const currentUserData = JSON.parse(
-          localStorage.getItem("user_data") || "{}"
-        );
-        const updatedUserData = { ...currentUserData, ...result.user };
-        localStorage.setItem("user_data", JSON.stringify(updatedUserData));
+      // 5. Update Local Storage dengan data terbaru
+      // Sesuaikan 'result.data' dengan struktur respons BE Anda
+      const newUserObj = result.data || result.user || result;
 
-        setFormData((prev) => ({
-          ...prev,
-          name: result.user.name,
-          biography: result.user.biography,
-          password: "",
-        }));
-      }
+      const currentUserData = JSON.parse(
+        localStorage.getItem("user_data") || "{}"
+      );
+      const updatedUserData = { ...currentUserData, ...newUserObj };
+
+      localStorage.setItem("user_data", JSON.stringify(updatedUserData));
+
+      setFormData((prev) => ({
+        ...prev,
+        name: updatedUserData.name,
+        biography: updatedUserData.biography,
+        password: "", // Reset field password setelah sukses
+      }));
 
       alert("Profile updated successfully!");
     } catch (error) {
@@ -171,28 +175,26 @@ const DashboardSettings = () => {
     <div className="w-full px-7 mx-auto pb-10 sm:pb-20">
       <div className="mb-8 border-b border-gray-200 pb-6">
         <h1 className="text-2xl font-bold text-gray-900">Your Profile</h1>
-        <p className="text-gray-500 mt-1">
-          Please update your profile settings here
-        </p>
+        <p className="text-gray-500 mt-1">Update your personal information</p>
       </div>
 
       <div className="flex flex-col">
-        {/* Name */}
-        {/* <SettingRow label="Full Name">
-          <Input
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="h-12 bg-white border-gray-200 text-gray-700 text-[16px] focus:ring-2 focus:ring-[#6366F1]"
-          />
-        </SettingRow> */}
+        {/* INPUT NAMA */}
+        <SettingRow label="Full Name">
+          <div className="flex h-12 w-full rounded-md border border-gray-200 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-primary/20">
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="flex-1 px-4 text-[14px] sm:text-[16px] text-gray-700 outline-none bg-transparent"
+              placeholder="Your Name"
+            />
+          </div>
+        </SettingRow>
 
-        {/* Phone (Read Only) */}
+        {/* PHONE (Read Only) */}
         <SettingRow label="Phone Number">
           <div className="flex h-12 w-full rounded-md border border-gray-200 bg-gray-50 overflow-hidden">
-            {/* <button className="flex items-center gap-2 px-4 border-r border-gray-200 bg-gray-100 cursor-default">
-              <span className="text-xl">📱</span>
-            </button> */}
             <input
               name="phone"
               value={formData.phone}
@@ -201,11 +203,11 @@ const DashboardSettings = () => {
             />
           </div>
           <p className="text-xs text-gray-400 mt-2">
-            Contact Admin to change your registered Phone Number.
+            Contact Admin to change your login Phone Number.
           </p>
         </SettingRow>
 
-        {/* Biography */}
+        {/* BIOGRAPHY */}
         <SettingRow
           label="Biography"
           subLabelIcon={<HelpCircle className="h-4 w-4" />}
@@ -215,30 +217,32 @@ const DashboardSettings = () => {
               name="biography"
               value={formData.biography}
               onChange={handleInputChange}
-              className="min-h-40 resize-y bg-white  text-gray-600 text-[14px] sm:text-[16px] leading-relaxed p-4 rounded-xl focus-visible:ring-primary focus-visible:ring-2  focus-visible:outline-none"
+              className="min-h-40 bg-white resize-none text-gray-600 text-[14px] sm:text-[16px] leading-relaxed p-4 rounded-xl focus-visible:ring-primary focus-visible:ring-2 focus-visible:outline-none"
               maxLength={325}
-              placeholder="Tell us about your role..."
+              placeholder="Tell us about yourself..."
             />
             <div className="absolute bottom-4 right-4 flex items-center gap-2">
               <span className="text-xs text-gray-400">
-                {325 - (formData.biography?.length || 0)} characters remaining
+                {325 - (formData.biography?.length || 0)} chars left
               </span>
             </div>
           </div>
         </SettingRow>
 
-        {/* Password */}
-        {/* <SettingRow label="New Password">
-          <Input
-            ref={passwordInputRef}
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Type new password here..."
-            className="h-12 bg-white border-gray-200 text-gray-700 text-[16px] focus:ring-2 focus:ring-[#6366F1] shadow-sm"
-          />
-        </SettingRow> */}
+        {/* PASSWORD CHANGE (Optional) */}
+        <SettingRow label="Change Password">
+          <div className="flex h-12 w-full rounded-md border border-gray-200 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-primary/20">
+            <input
+              ref={passwordInputRef}
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Leave empty to keep current password"
+              className="flex-1 px-4 text-[14px] sm:text-[16px] text-gray-700 outline-none bg-transparent"
+            />
+          </div>
+        </SettingRow>
       </div>
 
       <div className="flex justify-end gap-4 mt-4 sm:mt-10 pt-6 border-t border-gray-100">
@@ -273,6 +277,7 @@ const DashboardSettings = () => {
   );
 };
 
+// Ikon Helper
 const XIcon = ({ className }) => (
   <svg
     className={className}

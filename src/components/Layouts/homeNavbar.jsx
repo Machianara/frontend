@@ -52,7 +52,6 @@ const HomeNavbar = () => {
           <img src={Logo} alt="Logo Perusahaan" />
         </Link>
 
-        {/* --- Menu Desktop --- */}
         <ul className="hidden md:flex flex-row w-full justify-end items-center gap-8">
           {navLinks.map((link) => (
             <li key={link.title}>

@@ -109,7 +109,7 @@ const AccordionSupport = ({ className }) => {
           />
         ))}{" "}
       </div>{" "}
-      <Card className="flex flex-col gap-16 px-20 justify-center">
+      <Card className="flex flex-col gap-16 text-center sm:text-start sm:px-20 justify-center">
         <CardContent className="flex flex-col gap-16 justify-center items-center">
           <div className="flex flex-col gap-6 justify-center items-center">
             <img className="w-fit" src={Helpme} alt="" />

@@ -30,42 +30,42 @@ const Sidebar = ({ isSidebarOpen, closeSidebar, onLogout }) => {
     {
       id: "dashboard",
       to: "/dashboard",
-      text: content.dashboard[locale],
+      text: "Dashboard",
       icon: Dashboard,
       activeIcon: DashboardActive,
     },
     {
       id: "ticketing",
       to: "/ticketing",
-      text: content.addTicket[locale],
+      text: "Ticketing",
       icon: Ticket,
       activeIcon: TicketActive, 
     },
     {
       id: "predict",
       to: "/predict",
-      text: content.predict[locale],
+      text: "Predict",
       icon: ChartLine,
       activeIcon: ChartLineActive,
     },
     {
       id: "chat-ai",
       to: "/chatai",
-      text: content.chatAI[locale],
+      text: "Chat with AI",
       icon: ChatAi,
       activeIcon: ChatAiActive,
     },
     {
       id: "support",
       to: "/support",
-      text: content.supports[locale],
+      text: "Support",
       icon: Support,
       activeIcon: SupportActive,
     },
     {
       id: "settings",
       to: "/settings",
-      text: content.settings[locale],
+      text: "Settings",
       icon: Settings,
       activeIcon: SettingsActive,
     },
@@ -74,7 +74,7 @@ const Sidebar = ({ isSidebarOpen, closeSidebar, onLogout }) => {
   const logoutItem = {
     id: "logout",
     icon: Logout,
-    text: content.logout[locale],
+    text: "Logout",
   };
 
   return (

@@ -1,15 +1,12 @@
-import { useState, useContext, useMemo } from "react";
-import Sidebar from "./sidebarLayout"; // Pastikan path import ini benar sesuai struktur folder Anda
-import DashboardNavbar from "./dashboardNavbar"; // Pastikan path ini benar
+import { useState, useMemo } from "react";
+import Sidebar from "./sidebarLayout"; 
+import DashboardNavbar from "./dashboardNavbar"; 
 import { useLocation } from "react-router-dom";
 
-import LocaleContext from "../../contexts/LocaleContext";
-import content from "../../utils/content";
 
 const AppLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const handleLogout = () => {
-    // Hapus data autentikasi
     localStorage.removeItem("token");
     localStorage.removeItem("user_data");
 
@@ -17,32 +14,31 @@ const AppLayout = ({ children }) => {
   };
 
   const location = useLocation();
-  const { locale } = useContext(LocaleContext);
 
   const pageTitle = useMemo(() => {
     const path = location.pathname.toLowerCase(); 
 
-    if (path.startsWith("/ticketing")) return content.addTicket[locale];
+    if (path.startsWith("/ticketing")) return "Ticketing";
 
     switch (path) {
       case "/dashboard":
-        return content.dashboard[locale];
+        return "Dashboard";
       case "/ticketing":
-        return content.addTicket[locale];
+        return "Ticketing";
       case "/support":
-        return content.supports[locale];
+        return "Support";
       case "/predict":
-        return content.predict[locale];
+        return "Predict";
       case "/chatai":
-        return content.chatAI[locale];
+        return "Chat with AI";
       case "/settings":
-        return content.settings[locale];
+        return "Settings";
       case "/admin":
         return "Admin Page"; 
       default:
         return "Dashboard";
     }
-  }, [location.pathname, locale]);
+  }, [location.pathname]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

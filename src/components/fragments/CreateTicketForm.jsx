@@ -72,11 +72,10 @@ const CreateTicketForm = () => {
     console.log("Data to send:", formData);
 
     if (!formData.machineName || !formData.issue || !formData.date) {
-      const errorText = content.alertFillFields
-        ? content.alertFillFields[locale]
-        : content.alertSendError[locale];
+      // Pilihan kalimat
+      const errorText = "Mohon lengkapi semua data formulir yang wajib diisi.";
 
-      showError(errorText); 
+      showError(errorText);
       setIsLoading(false);
       return;
     }
@@ -115,7 +114,7 @@ const CreateTicketForm = () => {
       setFormData({ machineName: "", date: "", issue: "" });
 
       // Jika sukses:
-      setIsSuccessModalOpen(true); 
+      setIsSuccessModalOpen(true);
     } catch (error) {
       console.error("Error creating ticket:", error);
       showError("Gagal terhubung ke server. Silakan coba lagi nanti.");
@@ -135,7 +134,7 @@ const CreateTicketForm = () => {
                   htmlFor="machineName"
                   className="text-md font-medium text-gray-700"
                 >
-                  {content.machineName[locale]}
+                  ID Machine
                 </Label>
                 <Input
                   id="machineName"
@@ -151,7 +150,7 @@ const CreateTicketForm = () => {
                   htmlFor="date"
                   className="text-md font-medium text-gray-700"
                 >
-                  {content.dateTicket[locale]}
+                  Date
                 </Label>
                 <DatePicker
                   type="date"
@@ -170,19 +169,19 @@ const CreateTicketForm = () => {
                 htmlFor="issue"
                 className="text-md font-medium text-gray-700"
               >
-                {content.issue[locale]}
+                Issue
               </Label>
               <Textarea
                 id="issue"
-                placeholder={content.detailIssue[locale]}
-                className="min-h-[120px] text-[16px] bg-white border-gray-300 focus:ring-2 focus:ring-blue-500"
+                placeholder="Describe resize the machine issue"
+                className="min-h-[120px] resize-none text-[16px] bg-white border-gray-300 focus:ring-2 focus:ring-blue-500"
                 value={formData.issue}
                 onChange={handleInputChange}
                 disabled={isLoading}
                 maxLength={500}
               />
               <p className="text-xs text-right text-gray-400">
-                {500 - formData.issue.length} {content.caracter[locale]}
+                {500 - formData.issue.length} remaining characters
               </p>
             </div>
 
@@ -201,7 +200,7 @@ const CreateTicketForm = () => {
                   </>
                 ) : (
                   // Teks tombol dinamis berdasarkan locale
-                  content.buttonCreateTicket[locale]
+                  "Create Ticket"
                 )}
               </Button>
             </div>
@@ -244,7 +243,7 @@ const CreateTicketForm = () => {
               <AlertCircle className="h-8 w-8 text-red-600" />
             </div>
             <DialogTitle className="text-xl font-bold text-red-600">
-              {content.actionRequired[locale]}
+              Action Required
             </DialogTitle>
             <DialogDescription className="text-center text-gray-700 text-[16px] font-medium px-2">
               {errorMessage}
@@ -257,7 +256,7 @@ const CreateTicketForm = () => {
               className="w-full sm:w-auto px-8"
               onClick={() => setIsErrorModalOpen(false)}
             >
-              {content.okay[locale]}
+              Oke
             </Button>
           </DialogFooter>
         </DialogContent>
