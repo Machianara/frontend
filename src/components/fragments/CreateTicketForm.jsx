@@ -72,32 +72,16 @@ const CreateTicketForm = () => {
     console.log("Data to send:", formData);
 
     if (!formData.machineName || !formData.issue || !formData.date) {
-      // Ambil pesan error dari content.js sesuai bahasa
-      // Pastikan key 'alertFillFields' ada di content.js Anda
       const errorText = content.alertFillFields
         ? content.alertFillFields[locale]
         : content.alertSendError[locale];
 
-      showError(errorText); // Munculkan modal error custom
+      showError(errorText); 
       setIsLoading(false);
       return;
     }
 
     try {
-      // -----------------------------------------------------------
-      // [BE INTEGRATION] 2. PANGGIL API DI SINI
-      // -----------------------------------------------------------
-      /*
-      const response = await fetch('/api/tickets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      
-      if (!response.ok) throw new Error('Failed to create ticket');
-      const result = await response.json();
-      */
-
       const payload = {
         machine_name: formData.machineName,
         date: formData.date,
@@ -131,7 +115,7 @@ const CreateTicketForm = () => {
       setFormData({ machineName: "", date: "", issue: "" });
 
       // Jika sukses:
-      setIsSuccessModalOpen(true); // Buka Modal Sukses
+      setIsSuccessModalOpen(true); 
     } catch (error) {
       console.error("Error creating ticket:", error);
       showError("Gagal terhubung ke server. Silakan coba lagi nanti.");
@@ -145,7 +129,6 @@ const CreateTicketForm = () => {
       <Card className="w-full rounded-2xl shadow-lg border-none bg-white">
         <CardContent className="p-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Grup Machine Name & Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <Label

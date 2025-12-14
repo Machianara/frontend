@@ -42,7 +42,6 @@ const FormLogin = () => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  // State Debug untuk melihat apa yang dibaca sistem
   const [debugInfo, setDebugInfo] = useState("");
 
   const phoneRef = useRef(null);
@@ -105,7 +104,6 @@ const FormLogin = () => {
       const phone = decodedUser?.phone || phoneInput;
 
       // --- DEBUGGING MESSAGE ---
-      // Ini akan muncul di modal sukses agar Anda tahu apa yang terjadi
       const info = `Role: ${role} | Phone: ${phone}`;
       setDebugInfo(info);
       console.log("DEBUG INFO:", decodedUser);
@@ -115,9 +113,6 @@ const FormLogin = () => {
 
       // 5. REDIRECT BERDASARKAN HASIL PENGECEKAN
       setTimeout(() => {
-        // SYARAT MASUK ADMIN:
-        // 1. Role harus mengandung kata 'admin'
-        // 2. ATAU No HP spesifik Admin Utama (Backup plan)
         if (role.includes("admin") || phone === "081234567890") {
           window.location.href = "/admin";
         } else {

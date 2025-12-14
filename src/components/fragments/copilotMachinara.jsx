@@ -4,14 +4,11 @@ import Lara from "@/assets/img/lara-sit.png";
 import Technology from "@/assets/img/larabot.gif";
 import {
   SendHorizonal,
-  User,
-  Bot,
   Sparkles,
   Trash2,
   Zap,
   Cpu,
   Activity,
-  AlertTriangle,
   WifiOff,
 } from "lucide-react";
 
@@ -36,8 +33,7 @@ const CophilotMachinara = () => {
   // const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const textareaRef = useRef(null); // Ref untuk akses DOM textarea
-  // State khusus untuk error koneksi
+  const textareaRef = useRef(null); 
   const [connectionError, setConnectionError] = useState(null);
 
   const messagesEndRef = useRef(null);
@@ -116,19 +112,18 @@ const CophilotMachinara = () => {
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      // 1. Reset tinggi ke 'auto' dulu supaya saat hapus text, tingginya bisa mengecil
+
       textarea.style.height = "auto";
 
       // 2. Set tinggi sesuai scrollHeight (tinggi konten)
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }, [inputText]); // Jalankan setiap kali inputText berubah
+  }, [inputText]); 
 
   const handleSend = async (textToSend) => {
     const messageText = textToSend || inputText;
     if (!messageText.trim()) return;
 
-    // Reset error sebelumnya
     setConnectionError(null);
 
     // 1. Tambah Pesan User
@@ -142,12 +137,8 @@ const CophilotMachinara = () => {
     setIsLoading(true);
 
     try {
-      // ---------------------------------------------------------
-      // FETCH API
-      // ---------------------------------------------------------
-      // Kita gunakan AbortController untuk timeout jika server lambat merespon
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000); // 8 detik timeout
+      const timeoutId = setTimeout(() => controller.abort(), 20000); 
 
       const response = await fetch(
         "https://machinelearning-production-344f.up.railway.app/chat-bot",
@@ -159,7 +150,7 @@ const CophilotMachinara = () => {
           },
           body: JSON.stringify({
             message: messageText,
-            session_id: sessionId, // Menggunakan Session ID yang persisten
+            session_id: sessionId, 
           }),
           signal: controller.signal,
         }
@@ -200,7 +191,6 @@ const CophilotMachinara = () => {
       setConnectionError(errorMsg);
 
       // --- FALLBACK / SIMULASI MODE ---
-      // Jika terjadi error koneksi, kita berikan respon simulasi agar demo tetap jalan
       if (isCorsOrNetworkError) {
         setTimeout(() => {
           const fallbackResponse = `[⚠️ MODE OFFLINE/SIMULASI]\n\nSaya tidak dapat terhubung ke server asli karena kendala teknis (CORS/Network).\n\nNamun, jika server terhubung, saya akan menjawab pertanyaan: "${messageText}" dengan analisis data mesin terkait suhu, getaran, dan prediksi maintenance.`;

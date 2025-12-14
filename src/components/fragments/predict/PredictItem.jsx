@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { EquipmentList } from "@/components/fragments/predict/EquipmentList";
 import { ManualInputSection } from "@/components/fragments/predict/ManualInputSection";
 import { EquipmentHeader } from "@/components/fragments/predict/EquipmentHeader";
@@ -19,10 +19,8 @@ export default function PredictPage() {
 
   // Default Tab sekarang "All"
   const [activeTab, setActiveTab] = useState("All");
-  // Default Params kosong ("") artinya ambil semua data
   const [activeParams, setActiveParams] = useState("");
 
-  // Mode Anomaly: Hanya mengunci tab Critical & Warning
   const [isAnomalyMode, setIsAnomalyMode] = useState(false);
 
   // State Detail & Header
@@ -44,12 +42,10 @@ export default function PredictPage() {
       setPage(1);
       setHasMore(true);
 
-      // --- SETUP DEFAULT KE TAB "All" ---
       setActiveTab("All");
-      setActiveParams(""); // Kosong = Endpoint default (All Status)
+      setActiveParams(""); 
       setIsAnomalyMode(false);
 
-      // Fetch Data Page 1 (Tanpa parameter status = All)
       const response = await fetch(`${API_BASE_URL}?page=1&limit=20`);
       if (!response.ok) throw new Error("Gagal ambil data");
 
@@ -69,25 +65,17 @@ export default function PredictPage() {
     }
   };
 
-  // --- LOGIKA GANTI TAB ---
   const handleListTabChange = async (tabName) => {
     setActiveTab(tabName);
     setPage(1);
-
-    // --- LOGIKA PENYARINGAN (FILTERING) ---
-    // Tab "Critical" & "Warning" HANYA boleh fetch jika sudah Scan Anomaly.
-    // Tab "All" & "Normal" BOLEH fetch kapan saja.
     const restrictedTabs = ["Critical", "Warning"];
 
     if (restrictedTabs.includes(tabName) && !isAnomalyMode) {
-      // Jika tab terlarang dan belum mode anomali -> Kosongkan list
       setEquipmentList([]);
       setHasMore(false);
-      setActiveParams(""); // Dummy param
+      setActiveParams(""); 
       return;
     }
-
-    // Jika Lolos (All, Normal, atau sudah Scan), Lanjut Fetch:
     setHasMore(true);
     setEquipmentList([]);
 
@@ -95,12 +83,11 @@ export default function PredictPage() {
     if (tabName === "Normal") newParams = "status=Normal";
     else if (tabName === "Critical") newParams = "status=Critical";
     else if (tabName === "Warning") newParams = "status=Warning";
-    else if (tabName === "All") newParams = ""; // Kosong = All
+    else if (tabName === "All") newParams = ""; 
 
     setActiveParams(newParams);
 
     try {
-      // Construct URL: Jika newParams kosong, jangan tambah tanda tanya ganda yg aneh, tapi fetch handle otomatis
       const query = newParams
         ? `${newParams}&page=1&limit=20`
         : `page=1&limit=20`;
@@ -125,7 +112,6 @@ export default function PredictPage() {
     const nextPage = page + 1;
 
     try {
-      // Pastikan format query benar (cek apakah activeParams ada isinya)
       const queryParams = activeParams
         ? `${activeParams}&page=${nextPage}&limit=20`
         : `page=${nextPage}&limit=20`;
@@ -184,11 +170,7 @@ export default function PredictPage() {
     setEquipmentList(data);
     setHasMore(true);
     setPage(1);
-
-    // Buka akses ke tab Critical & Warning
     setIsAnomalyMode(true);
-
-    // Tetap di tab "All" karena hasil scan adalah campuran
     setActiveTab("All");
     setActiveParams("");
 

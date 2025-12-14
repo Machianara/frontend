@@ -120,18 +120,16 @@ export const ForecastResultViewer = ({ rawResult }) => {
         backgroundColor: "rgba(239, 68, 68, 0.5)",
         tension: 0.3,
         pointRadius: 4,
-        // FIX 1: Matikan clipping agar titik di pinggir tidak terpotong
         clip: false,
       },
       {
         label: "Simulated Risk Prediction",
         data: simulatedTrend.map((item) => item.risk_score),
-        borderColor: "rgb(249, 115, 22)", // Orange-500
+        borderColor: "rgb(249, 115, 22)", 
         backgroundColor: "rgba(249, 115, 22, 0.5)",
         borderDash: [5, 5],
         tension: 0.3,
         pointRadius: 4,
-        // FIX 1: Matikan clipping
         clip: false,
       },
     ],
@@ -142,7 +140,7 @@ export const ForecastResultViewer = ({ rawResult }) => {
     maintainAspectRatio: false,
     layout: {
       padding: {
-        top: 10, // Sedikit padding tambahan
+        top: 10, 
         right: 20,
         left: 10,
         bottom: 5,
@@ -176,12 +174,10 @@ export const ForecastResultViewer = ({ rawResult }) => {
           font: { size: 11, weight: "bold" },
         },
         beginAtZero: true,
-        // FIX 2: Set MAX ke 105 (di atas 100) agar ada ruang kosong di atap grafik
         max: 100,
         
         grid: { color: "#f3f4f6" },
         ticks: {
-          // Opsional: Pastikan label sumbu Y tetap terlihat rapi (misal step size 20)
           stepSize: 20,
         },
       },
@@ -193,7 +189,6 @@ export const ForecastResultViewer = ({ rawResult }) => {
 
   return (
     <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-bottom-2">
-      {/* 1. Maintenance Estimation */}
       {data.maintenance_estimation && (
         <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 shadow-sm">
           <h5 className="text-xs font-bold text-orange-600 uppercase mb-2 flex items-center gap-2">
@@ -216,8 +211,6 @@ export const ForecastResultViewer = ({ rawResult }) => {
           </div>
         </div>
       )}
-
-      {/* 3. CHART SECTION (Risk Score) */}
       {(currentTrend.length > 0 || simulatedTrend.length > 0) && (
         <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
           <h5 className="text-xs font-bold text-gray-600 uppercase mb-4 flex items-center gap-2">
@@ -228,8 +221,6 @@ export const ForecastResultViewer = ({ rawResult }) => {
           </div>
         </div>
       )}
-
-      {/* 4. Table Data */}
       {(simulatedTrend.length > 0 || currentTrend.length > 0) && (
         <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
           <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
@@ -245,7 +236,6 @@ export const ForecastResultViewer = ({ rawResult }) => {
                 <tr>
                   <th className="p-3 font-medium">Day</th>
                   <th className="p-3 font-medium">Risk Score</th>{" "}
-                  {/* Utamakan Risk Score */}
                   <th className="p-3 font-medium">Tool Wear Est</th>
                   <th className="p-3 font-medium">Status</th>
                   <th className="p-3 font-medium">Reason</th>

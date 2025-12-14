@@ -213,7 +213,6 @@ const Admin = () => {
     }
   };
 
-  // --- 4. DELETE LOGIC ---
   const initiateDelete = (id) => {
     setDeleteConfirm({ isOpen: true, idToDelete: id });
   };

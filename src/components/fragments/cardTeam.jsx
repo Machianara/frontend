@@ -74,7 +74,6 @@ const CardTeam = () => {
           <img className="profile-card__avatar grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500 ease-in-out" src={Reinhand} alt="" />
           <div className="profile-card__info">
             <figure className="profile-card__socials">
-              {/* Tambahkan class di sini */}
               <img
                 src={KpsReinhand}
                 alt=""
@@ -101,7 +100,6 @@ const CardTeam = () => {
           <img className="profile-card__avatar grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500 ease-in-out" src={Yuda} alt="" />
           <div className="profile-card__info">
             <figure className="profile-card__socials">
-              {/* Tambahkan class di sini */}
               <img
                 src={KpsYuda}
                 alt=""
@@ -128,7 +126,6 @@ const CardTeam = () => {
           <img className="profile-card__avatar grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500 ease-in-out" src={Jesika} alt="" />
           <div className="profile-card__info">
             <figure className="profile-card__socials">
-              {/* Tambahkan class di sini */}
               <img
                 src={KpsJesika}
                 alt=""
@@ -155,7 +152,6 @@ const CardTeam = () => {
           <img className="profile-card__avatar grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500 ease-in-out" src={Rasyid} alt="" />
           <div className="profile-card__info">
             <figure className="profile-card__socials">
-              {/* Tambahkan class di sini */}
               <img
                 src={KpsRasyid}
                 alt=""

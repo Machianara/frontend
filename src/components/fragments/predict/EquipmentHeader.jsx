@@ -18,7 +18,7 @@ import {
   Flame,
   Info,
   Sparkles,
-  FileText, // Make sure to import this icon
+  FileText, 
 } from "lucide-react";
 
 // IMPORT VIEWER
@@ -76,15 +76,11 @@ export const EquipmentHeader = ({
   basicInfo,
   detailData,
   isLoading,
-  viewMode, // 'sidebar', 'manual', 'failure'
+  viewMode, 
   forecastData,
 }) => {
-  // ==================================================================================
-  // 1. MODE: FAILURE PREDICTION
-  // ==================================================================================
   if (viewMode === "failure") {
     if (!forecastData) {
-      // Placeholder Failure
       return (
         <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm min-h-[400px] flex flex-col items-center justify-center text-gray-400 animate-in fade-in">
           <Sparkles className="w-12 h-12 mb-4 opacity-20" />
@@ -92,7 +88,6 @@ export const EquipmentHeader = ({
         </div>
       );
     }
-    // Result Failure
     return (
       <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm min-h-[400px] animate-in fade-in">
         <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-4">
@@ -111,11 +106,7 @@ export const EquipmentHeader = ({
     );
   }
 
-  // ==================================================================================
-  // 2. MODE: MANUAL CHECK (STATUS MACHINE)
-  // ==================================================================================
   if (viewMode === "manual") {
-    // A. Jika Data Kosong (Belum Search) -> INI YANG TADI HILANG/BABLAS
     if (!detailData || !basicInfo.product_id) {
       return (
         <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm min-h-[400px] flex flex-col items-center justify-center text-gray-400 animate-in fade-in">
@@ -125,7 +116,6 @@ export const EquipmentHeader = ({
       );
     }
 
-    // B. Jika Data Ada -> Tampilkan Kartu Berwarna
     const analysisData = detailData?.report_data?.analisis || {};
     const mesin = detailData?.report_data?.mesin || {};
     const prediksi = detailData?.report_data?.prediksi || {};
@@ -184,7 +174,6 @@ export const EquipmentHeader = ({
       <div
         className={`mt-0 ${statusConfig.bgColor} rounded-2xl p-6 border ${statusConfig.borderColor} shadow-sm animate-in fade-in`}
       >
-        {/* Header Manual View */}
         <div
           className={`flex flex-col gap-3 mb-4 pb-3 border-b ${statusConfig.borderColor}`}
         >
@@ -217,7 +206,6 @@ export const EquipmentHeader = ({
           </div>
         </div>
 
-        {/* Pesan Fisik */}
         {prediksi.pesan_fisik && (
           <div className="mb-4 bg-white/70 p-3 rounded-lg border border-gray-200 flex gap-3 items-start">
             <Info
@@ -340,10 +328,6 @@ export const EquipmentHeader = ({
     );
   }
 
-  // ==================================================================================
-  // 3. MODE: DEFAULT (SIDEBAR LIST / ANOMALY DETECTION)
-  // ==================================================================================
-
   const analysisData = detailData?.report_data?.analisis || {};
   let visualDataDefault = analysisData.radar_chart;
   let imageSrcDefault = visualDataDefault;
@@ -359,7 +343,6 @@ export const EquipmentHeader = ({
     visualDataDefault &&
     (visualDataDefault.length > 200 || visualDataDefault.startsWith("http"));
 
-  // STATE KOSONG (Belum ada data dipilih dari Sidebar)
   if (!basicInfo.product_id) {
     return (
       <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm min-h-[400px] flex flex-col items-center justify-center text-gray-400">

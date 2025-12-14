@@ -5,8 +5,8 @@ import {
   MessageSquare,
   Grip,
   Loader2,
-  Trash2, // <-- Icon Sampah
-  AlertTriangle, // <-- Icon Warning
+  Trash2, 
+  AlertTriangle, 
 } from "lucide-react";
 
 // --- IMPORT KOMPONEN SHADCN ---
@@ -46,15 +46,12 @@ export const ChatCopilot = () => {
   const popoverRef = useRef(null);
   const chatBodyRef = useRef(null);
 
-  // --- STATE ---
-  // 1. Load data dari storage dengan validasi waktu 1 jam
   const [messages, setMessages] = useState(() => {
     if (typeof window !== "undefined") {
       const savedData = localStorage.getItem(STORAGE_KEY);
       if (savedData) {
         const parsed = JSON.parse(savedData);
         const now = Date.now();
-        // Cek kadaluarsa
         if (now - parsed.timestamp < ONE_HOUR_MS) {
           return parsed.messages;
         } else {
@@ -113,7 +110,7 @@ export const ChatCopilot = () => {
     setIsDeleteModalOpen(true);
   };
 
-  // Konfirmasi Hapus (Aksi Nyata)
+  // Konfirmasi Hapus
   const confirmDelete = () => {
     setMessages([initialMessage]);
     localStorage.removeItem(STORAGE_KEY);

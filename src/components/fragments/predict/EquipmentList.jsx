@@ -7,8 +7,6 @@ import {
   Loader2,
   ChevronDown,
 } from "lucide-react";
-
-// --- Status Badge & Progress Bar (Tetap Sama) ---
 const StatusBadge = ({ status, children }) => {
   let styles = "bg-gray-100 text-gray-800";
   if (status) {
@@ -57,13 +55,11 @@ export const EquipmentList = ({
   isLoadingMore,
   activeTab,
   onTabChange,
-  // isAnomalyMode tidak lagi dipakai di UI karena tombol selalu aktif
 }) => {
   const tabs = ["All", "Normal", "Critical", "Warning"];
 
   return (
     <div className="space-y-4">
-      {/* Header Filter */}
       <div className="flex flex-col space-y-3 mb-4">
         <div className="flex items-center space-x-2">
           <Activity className="w-5 h-5" />
@@ -150,7 +146,6 @@ export const EquipmentList = ({
               </div>
             ))}
 
-            {/* Tombol Load More hanya muncul jika ada data lebih */}
             {hasMore && (
               <button
                 onClick={onLoadMore}

@@ -2,19 +2,14 @@ import React, { useState, useEffect } from "react";
 import {
   Leaf,
   Clock,
-  History,
   ArrowUpRight,
   ArrowDownRight,
-  Minus, // Icon untuk data statis
+  Minus, 
 } from "lucide-react";
 import Critical from "/critical.svg";
 import Warning from "/warning.svg";
 import Normal from "/normal.svg";
 import Score from "/score.svg";
-
-// ------------------------------------------------------------------
-// [MOCK UI COMPONENTS]
-// ------------------------------------------------------------------
 
 const Card = ({ className, children }) => (
   <div
@@ -129,7 +124,6 @@ const AssetStatCard = ({ title, value, label, delta, icon, colorScheme }) => {
               <ArrowUpRight className="h-3 w-3 text-green-600" />
             )
           ) : (
-            // Icon Minus untuk menunjukkan data snapshot (Live Data)
             <Minus className="h-3 w-3 text-gray-400" />
           )}
           {delta}
@@ -139,9 +133,6 @@ const AssetStatCard = ({ title, value, label, delta, icon, colorScheme }) => {
   );
 };
 
-// ------------------------------------------------------------------
-// [STYLE HELPER]
-// ------------------------------------------------------------------
 const getStyleByType = (type) => {
   switch (type) {
     case "critical":
@@ -212,16 +203,10 @@ const getStyleByType = (type) => {
   }
 };
 
-// ------------------------------------------------------------------
-// [MAIN COMPONENT] AssetHealthOverview
-// ------------------------------------------------------------------
 const AssetHealthOverview = () => {
   const [activeTab, setActiveTab] = useState("realtime");
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // [FIX] Hapus state error karena tidak ditampilkan di UI (diganti fallback data)
-  // const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -246,11 +231,6 @@ const AssetHealthOverview = () => {
 
         const result = await response.json();
 
-        // -----------------------------------------------------------
-        // [DATA MAPPING - FINAL]
-        // Semua data menggunakan Label Statis ("Action Required", "Total Count", dll).
-        // Tidak ada lagi persentase atau tren palsu.
-        // -----------------------------------------------------------
 
         const mappedData = [
           {
@@ -259,7 +239,7 @@ const AssetHealthOverview = () => {
             title: "Critical",
             value: result.critical_count?.toString() || "0",
             label: "Machines",
-            delta: "Action Required", // Statis
+            delta: "Action Required", 
           },
           {
             id: 2,
@@ -267,7 +247,7 @@ const AssetHealthOverview = () => {
             title: "Warning",
             value: result.warning_count?.toString() || "0",
             label: "Machines",
-            delta: "Total Count", // Statis
+            delta: "Total Count", 
           },
           {
             id: 3,
@@ -275,7 +255,7 @@ const AssetHealthOverview = () => {
             title: "Normal",
             value: result.normal_count?.toString() || "0",
             label: "Machines",
-            delta: "Total Count", // Statis
+            delta: "Total Count", 
           },
           {
             id: 4,
@@ -283,7 +263,7 @@ const AssetHealthOverview = () => {
             title: "Avg Score",
             value: `${result.avg_health_score}%`,
             label: "Overall Health",
-            delta: "Live Monitor", // Statis
+            delta: "Live Monitor",
           },
         ];
 
@@ -291,7 +271,6 @@ const AssetHealthOverview = () => {
       } catch (err) {
         console.error("Error fetching stats:", err);
 
-        // Fallback Data saat error/offline
         setData([
           {
             id: 1,

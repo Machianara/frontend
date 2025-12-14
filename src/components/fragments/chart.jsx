@@ -15,8 +15,6 @@ const API_URL = "https://backend-dev-service.up.railway.app/api/tickets";
 const MixBarChart = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // --- 1. FETCH DATA ---
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -44,7 +42,6 @@ const MixBarChart = () => {
     fetchTickets();
   }, []);
 
-  // --- 2. OLAH DATA (JAN - DES) ---
   const chartData = useMemo(() => {
     const months = [];
     const currentYear = new Date().getFullYear();
@@ -89,7 +86,6 @@ const MixBarChart = () => {
   }
 
   return (
-    // Hapus style width/aspectRatio manual, gunakan class tailwind agar responsif mengikuti parent card
     <div className="w-full h-[70vh] mt-4">
       <h3 className="text-lg font-bold text-gray-700 mb-4 px-2">
         Statistik Tiket Tahun Ini
@@ -97,24 +93,23 @@ const MixBarChart = () => {
 
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={chartData}
-          // PERBAIKAN: Margin Kiri Negatif agar mepet ke kiri
+          data={chartData}          
           margin={{
             top: 5,
             right: 0,
-            left: -20, // Menarik sumbu Y ke kiri
+            left: -20, 
             bottom: 0,
           }}
         >
           <CartesianGrid
             strokeDasharray="5 5"
-            vertical={false} // Hapus garis vertikal agar lebih bersih
+            vertical={false} 
             stroke="#D1D5DB"
           />
 
           <XAxis
             dataKey="name"
-            tick={{ fill: "#6B7280", fontSize: 10 }} // Font lebih kecil agar muat
+            tick={{ fill: "#6B7280", fontSize: 10 }} 
             interval={0}
             tickFormatter={(value) => value.substring(0, 3)}
             dy={10}
@@ -155,7 +150,7 @@ const MixBarChart = () => {
             name="Total Masuk"
             fill="#1c3347"
             // radius={[4, 4, 0, 0]}
-            barSize={40} // Bar lebih ramping agar elegan
+            barSize={40} 
           />
         </BarChart>
       </ResponsiveContainer>

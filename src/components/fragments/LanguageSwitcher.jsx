@@ -1,11 +1,8 @@
 import React, { useState, useContext } from "react";
-// Pastikan package react-icons sudah terinstal
 import { FaChevronDown } from "react-icons/fa";
 
-// Impor Context Anda
 import LocaleContext from "../../contexts/LocaleContext";
 
-// 1. Definisikan pilihan Anda
 const languages = [
   { value: "id", label: "Indonesia", flag: "id" },
   { value: "en", label: "Eng (Us)", flag: "us" },
@@ -13,12 +10,7 @@ const languages = [
 
 const LanguageSwitcher = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  // 2. Ambil 'locale' dan 'setLocale' dari Global Context
   const { locale, setLocale } = useContext(LocaleContext);
-
-  // 3. Tentukan bahasa yang sedang aktif
-  // Pastikan logika ini tidak mengubah state (setLocale), hanya membaca.
   const selected =
     languages.find((lang) => lang.value === locale) || languages[0];
 
