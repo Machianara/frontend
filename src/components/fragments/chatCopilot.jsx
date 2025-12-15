@@ -5,8 +5,8 @@ import {
   MessageSquare,
   Grip,
   Loader2,
-  Trash2, 
-  AlertTriangle, 
+  Trash2,
+  AlertTriangle,
 } from "lucide-react";
 
 // --- IMPORT KOMPONEN SHADCN ---
@@ -309,8 +309,8 @@ export const ChatCopilot = () => {
       )}
 
       {/* --- MODAL DIALOG HAPUS --- */}
-      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen} className="z-90">
-        <DialogContent className="sm:max-w-md bg-white border-l-4 border-red-500">
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="sm:max-w-md bg-white border-l-4 z-90 border-red-500">
           <DialogHeader className="flex flex-col items-center text-center gap-2">
             <div className="h-14 w-14 bg-red-100 rounded-full flex items-center justify-center mb-2">
               <AlertTriangle className="h-8 w-8 text-red-600" />
