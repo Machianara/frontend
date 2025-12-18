@@ -41,7 +41,7 @@ body {
   }
 
   .card-machine {
-    @apply flex flex-col md:flex-row h-full gap-8 min-h-[310px] justify-between p-[25px] lg:p-[50px] 
+    @apply flex flex-col md:flex-row h-full gap-8 min-h-[310px] max-h-[310px] justify-between p-[25px] lg:p-[50px] 
            border border-primary rounded-[45px] w-full max-w-full lg:max-w-[600px] 
 
            bg-white 
